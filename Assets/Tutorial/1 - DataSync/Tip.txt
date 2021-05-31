@@ -1,0 +1,6 @@
+If Use NetworkRoomManager , Equal Online,RoomScence
+
+Learn List
+  Forward,Back Sync  (studyGamePlayer > region : Send Message)
+  ChangeColor Sync  ( Variable Sync )
+  RegisterHandler / Send  Testing

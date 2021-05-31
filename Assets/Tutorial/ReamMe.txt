@@ -1,0 +1,17 @@
+Mirror : https://github.com/vis2k/Mirror#low-level-transports
+
+1 - DataSync =>> Basic Sync
+2 - Synchoronization =>> Move, Rotation Sync
+3 - Steam  =>> Create Lobby , Join Lobby , Get Lobby Data
+4 - Child Obj =>> NetworkTransformChild is Not Work! , Mirror Not Surpport ChildObj
+5 - NetworkProximityChecker =>> ( NetworkProximityChecker > DistanceInterestManagement )
+
+-----
+Removing Authority On Disconnect
+Synchronizing Remote Calls To Late Joiners (Delay Sync)
+Child Object Sync
+Network Proximity Checker (네트워크 근접 검사기)
+Network Proximity Checker + Delay Sync
+
+-----
+if Use NetworkRoomManager , Equally OnlineScene to RoomScene
