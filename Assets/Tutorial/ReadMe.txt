@@ -5,13 +5,12 @@ Steam API - Mirror ver : https://github.com/Chykary/FizzySteamworks/
 2 - Synchoronization =>> Move, Rotation Sync
 3 - Steam  =>> Create Lobby , Join Lobby , Get Lobby Data
 4 - Child Obj =>> NetworkTransformChild is Not Work! , Mirror Not Surpport ChildObj
+              =>> No Destroy Client Own Object when Disconnect Client
+                  => Remove Ownner, Move Ownner
 5 - NetworkProximityChecker =>> ( NetworkProximityChecker > DistanceInterestManagement )
 
 -----
-Removing Authority On Disconnect
-Synchronizing Remote Calls To Late Joiners (Delay Sync)
-Child Object Sync
-Network Proximity Checker (네트워크 근접 검사기)
+
 Network Proximity Checker + Delay Sync
 
 -----

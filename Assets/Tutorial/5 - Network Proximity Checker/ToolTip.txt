@@ -1,0 +1,20 @@
+>>Need Research! Can Improve Script
+
+NetworkIdentity컴포넌트를 가진 오브젝트가 플레이어(NetworkConnectionToClient - identity)기준 일정거리 벗어난 경우 
+서버 => MeshRender가 비활성화, SyncVar등은 정상작동
+클라이언트 => 제거됨
+
+숨겨지는 대상 예외처리 => NetworkIdentity.Visible - 강제 보이기로 하면됨
+
+비활성화 시킬려고 했으나 지금은포기, 개선하면 좋을듯
+특히 rebuildInterval 간격에 맞춰 모든 NetworkIdentity컴포넌트를 가진 오브젝트에 접근하는데
+좀더 연구필요.
+이대로 쓸경우 GC가 여러번 호출 될 수밖에 없음
+
+OnCheckObserver는 플레이어 참가시 보이게 할껀지 결정, 그외도 있을껀가?
+OnCheckObserver에서 false가 아니면 OnRebuildObservers에서 업데이트
+
+
+비용이 큰 foreach와 Vector3.Distance를 씀
+
+**연구를 확실하게 한것이 아니라 틀린내용있을수 있음

@@ -41,7 +41,7 @@ public class ProximityTestScript : NetworkBehaviour
         for (int i = 0; i < ObjAmount; i++)
         {
             GameObject temp = GameObject.Instantiate(TestObj);
-            temp.transform.position = new Vector3(Random.Range(-1f, 1f), gameObject.transform.position.y, Random.Range(-1f, 1f)) * ObjMaxDistance;
+            temp.transform.position = new Vector3(Random.Range(-1f, 1f), gameObject.transform.position.y, Random.Range(-1f, 1f)) * ObjMaxDistance * 2;
             NetworkServer.Spawn(temp);
 
             Objs.Add(temp);
