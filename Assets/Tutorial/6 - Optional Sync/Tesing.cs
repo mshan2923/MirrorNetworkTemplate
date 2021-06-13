@@ -23,6 +23,7 @@ public class Tesing : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(Tesing))]
 public class TesingEditor : Editor
 {
@@ -53,3 +54,4 @@ public class TesingEditor : Editor
         }
     }
 }
+#endif

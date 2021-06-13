@@ -76,7 +76,7 @@ public class StudyNetworkManager : NetworkRoomManager
     private void SendNotification()
     {
         NetworkServer.SendToAll(new Notification { data = "Send Message" });
-        //Receive StudyRoomPlayer
+        //Receive to StudyRoomPlayer
     }
     #endregion
 }

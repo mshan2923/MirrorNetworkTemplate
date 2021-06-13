@@ -855,7 +855,8 @@ namespace Mirror
                 return;
             }
 
-            identity.connectionToClient = (NetworkConnectionToClient)ownerConnection;
+            if (ownerConnection is NetworkConnectionToClient)
+                identity.connectionToClient = (NetworkConnectionToClient)ownerConnection;
 
             // special case to make sure hasAuthority is set
             // on start server in host mode

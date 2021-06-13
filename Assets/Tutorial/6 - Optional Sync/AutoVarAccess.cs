@@ -14,20 +14,20 @@ public class AutoVarAccess
     bool ignoreCase = true;
     Type varType = null;//타입제한
 
-    public delegate void ChangeDataDelegate(object oldData, object newData);
+    public delegate object ChangeDataDelegate(object oldData, object newData);
 
     private ChangeDataDelegate changeData;
-    public ChangeDataDelegate ChangeData 
+    public ChangeDataDelegate ChangeData //델리게이트 연결은 직접
     {   get
         {
             Debug.Log("Get ChangeData : " + (changeData != null));
             return changeData;
-        }/*
+        }
         set
         {
             changeData = value;
             Debug.Log("Set ChangData : " + value.ToString());
-        }*/
+        }
     }
 
     public Type VarType
@@ -42,6 +42,7 @@ public class AutoVarAccess
         ignoreCase = IgnoreCase;
 
         changeData = changeEvent;
+        Debug.Log("Reset");
     }
 
     public object Data
@@ -52,10 +53,16 @@ public class AutoVarAccess
         }
         set
         {
-            if (value.GetType() == varType || varType == null)
-                AutoVarAccessScript.SetVar(target, varName, value, ignoreCase);
-            else
-                Debug.LogWarning("Data.Set is Fail");
+            if (value != null)
+            {
+                if (value.GetType() == varType || varType == null)
+                    AutoVarAccessScript.SetVar(target, varName, value, ignoreCase);
+                else
+                    Debug.LogWarning("Data.Set is Fail");
+            }else
+            {
+                Debug.LogWarning("Vaule is null");
+            }
         }
     }//오브젝트 타입으로 간단하게
 
@@ -66,7 +73,7 @@ public class AutoVarAccess
         else
             return default;
     }
-
+    [Command(requiresAuthority = false)]
     public bool Set<T>(T data)
     {
         if (varType == typeof(T))
@@ -107,8 +114,14 @@ public class AutoVarAccess
 
         if (ChangeData != null)
         {
-            ChangeData.Invoke(Data, data);
-            //changeData(Data, data);
+            //ChangeData.Invoke(Data, data);
+            var result = ChangeData(Data, data);
+            if (result != null)
+            {
+                Data = result;
+            }else
+                Debug.LogWarning("Vaule is null");
+            //Data = ChangeData(Data, data);
         }
         else
             Debug.Log("send event - Not Setting Delegate | " + ChangeData );
@@ -119,7 +132,7 @@ public class AutoVarAccess
             Debug.LogWarning("Maybe Notwork When Use Not BasicType");
         }
 
-        Data = data;//유효 검사 미구현이므로 임시
+        //유효 검사는 델리게이트 ChangeData에서
     }//서버에 저장만
 
 }

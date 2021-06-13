@@ -6,7 +6,7 @@ using System;
 using UnityEditor;
 
 
-public class OptionalSyncVar : NetworkBehaviour
+public class OptionalSyncVar : NetworkBehaviour//============제너릭 클래스, 상속용버전으로 나눌거임 , 일단 이건 상속버전으로
 {
     [Header("Optional Sync Var")]
     public Component AccessSync;
@@ -25,44 +25,45 @@ public class OptionalSyncVar : NetworkBehaviour
     public float DotAngle = 60f;//        (Target.gameObject - gameobject) => 방향
     public bool ReverseDot = false;
 
-    [AttributeMask("Distance", "Dot", "Target Variable"), Space(10)]
+#if UNITY_EDITOR
+    [Expand.AttributeMask("Distance", "Dot", "Target Variable"), Space(10)]
+#endif
     public int CalculateTypeMask = 0;
 
-    private void Start()
-    {/*
+    public virtual void Start()
+    {
         if (isServer)
         {
-            SyncData.changeData = new AutoVarAccess.ChangeDataDelegate(ChangeSyncData);
-            SyncData.ChangeData = ChangeSyncData;
-
-            Debug.Log("Set Delegate : " + (SyncData.ChangeData != null));
-        }*/
+            SyncData.ChangeData = ChangeSyncData;//이거 실행되고 에디터에서 초기화
+        }
     }
-
-    public void ChangeSyncData(object oldData, object newData)
+    [Server]
+    public virtual object ChangeSyncData(object oldData, object newData)
     {
-        //(AutoVarAccess.ChangeDataEvent 에서 유효검사 )
         //자신포함 조건맞는 클라이어트에게만 데이터 전달
         //전달 받은거 데이터 넘기고 AutoVarAccess.Get<>에서 확인
 
         Debug.Log("Receive event - Server | " + newData);
-        if (NetworkServer.connections.Count > 0)
-            RPCTemp(newData);
+        RPCTemp(newData);
 
         SyncData.Data = newData;
+
+        //유효값 검사
+        return newData;
     }//Call Path { AutoVarAccess.SyncData < ChangeDataEvent < Set }
     // SyncData 쓸때 AutoVarAccess.Data로 자동 형전환
 
     [ClientRpc(includeOwner = true)]
-    void RPCTemp(object Data)
+    public virtual void RPCTemp(object Data)
     {
-        Debug.Log("Receive Client : " + Data.GetType() + " : " + Data.ToString());
+        Debug.LogWarning("Receive Client : " + Data.GetType() + " : " + Data.ToString() + " | " + (string)Data);
+        SyncData.Data = Data;
     }
 }
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(OptionalSyncVar))]
-public class SyncVarAttributeDrawer : Editor
+public class SyncVarAttributeDrawer : Editor//PropertDrawer으로... > 프로퍼티.isDirty으로 변경확인
 {
     OptionalSyncVar Onwer;
 
@@ -75,13 +76,6 @@ public class SyncVarAttributeDrawer : Editor
     private void OnEnable()
     {
         Onwer = target as OptionalSyncVar;
-        /*
-        if (Onwer.AccessSync != null && !string.IsNullOrEmpty(Onwer.SyncVarName))
-            Onwer.SyncData = new AutoVarAccess(Onwer.AccessSync, Onwer.SyncVarName);
-
-        if (Onwer.AccessTarget != null && !string.IsNullOrEmpty(Onwer.TargetVarName))
-            Onwer.TargetToggleData = new AutoVarAccess(Onwer.AccessTarget, Onwer.TargetVarName, typeof(bool));
-        */
     }
     public override void OnInspectorGUI()
     {

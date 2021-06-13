@@ -514,9 +514,12 @@ namespace Mirror
             // note: don't use List.ForEach here, this is a hot path
             //   List.ForEach: 432b/frame
             //   for: 231b/frame
-            for (int i = 0; i < syncObjects.Count; ++i)
+            if (syncObjects != null)
             {
-                syncObjects[i].Flush();
+                for (int i = 0; i < syncObjects.Count; ++i)
+                {
+                    syncObjects[i].Flush();
+                }
             }
         }
 
@@ -525,11 +528,14 @@ namespace Mirror
             // note: don't use Linq here. 1200 networked objects:
             //   Linq: 187KB GC/frame;, 2.66ms time
             //   for: 8KB GC/frame; 1.28ms time
-            for (int i = 0; i < syncObjects.Count; ++i)
+            if (syncObjects != null)
             {
-                if (syncObjects[i].IsDirty)
+                for (int i = 0; i < syncObjects.Count; ++i)
                 {
-                    return true;
+                    if (syncObjects[i].IsDirty)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;

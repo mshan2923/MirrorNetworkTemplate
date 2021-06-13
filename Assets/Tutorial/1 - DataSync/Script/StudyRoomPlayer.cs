@@ -27,5 +27,5 @@ public class StudyRoomPlayer : NetworkRoomPlayer
         Debug.Log(msg.data);
         var textCom = FindObjectOfType<UnityEngine.UI.Text>();
         textCom.text = msg.data;
-    }
+    }//Send from StudyNetManager . SendNotification
 }

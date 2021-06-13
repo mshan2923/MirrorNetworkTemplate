@@ -272,6 +272,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visRange: 10
   rebuildInterval: 0.1
+  Test:
+    data: '{"data":""}'
 --- !u!114 &285312028
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -481,8 +481,8 @@ MonoBehaviour:
   serverTickRate: 30
   serverBatching: 1
   serverBatchInterval: 0
-  offlineScene: Assets/Study/Scene/StudyMainMenu Scene.unity
-  onlineScene: Assets/Study/Scene/StudyLobbyScene.unity
+  offlineScene: 
+  onlineScene: 
   transport: {fileID: 555143703}
   networkAddress: localhost
   maxConnections: 100
