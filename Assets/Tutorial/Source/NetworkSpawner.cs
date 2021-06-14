@@ -11,12 +11,11 @@ public class NetworkSpawner : NetworkBehaviour
     public bool AutoSpawn = true;
     public bool ClientObject_Spawn = false;
 
-    [SerializeField]
-    List<uint> ClientSpawnObjects;//Server Only - 각자스폰 (SpawnOnlyServer == true) 일때 클라의 오브젝트 netID
-                                  //서버에서 PlayerID , ObjectID 를 리스트로 저장해서 관리
-                                  //Dictionary는 될려나?
+    Dictionary<uint, uint> ClientSpawnObjects;//Server Only - 서버에서 PlayerID , ObjectID 를 리스트로 저장해서 관리
 
-    //클라 연결끊킬때 소유물제거 되는건 NetManager에서, 잘하면 될지도?
+    public bool RemoveObjectWhenDisconnect = true;
+
+    //클라 연결끊킬때 소유물제거 되는건 NetManager에서 , 스폰된 오브젝트의 OnStopClient 연결해서 써도 될듯
     #region 구조체의 멤버가 uint일때 사용시 에러
     /*
     struct ClientID
@@ -54,8 +53,6 @@ public class NetworkSpawner : NetworkBehaviour
         
     }//클라가 시작은 했지만 연결안됨
 
-    public override void OnStopClient() { }
-
     public override void OnStartLocalPlayer() { }
 
     public override void OnStartAuthority() { }
@@ -64,9 +61,15 @@ public class NetworkSpawner : NetworkBehaviour
 
     #endregion
 
+    public override void OnStopClient() 
+    {
+
+    }
+
     private void Start()
     {
-        //NetworkClient.RegisterHandler<ClientID>(GetClientIDEvent, false);
+        ClientSpawnObjects = new Dictionary<uint, uint>();
+
         if (AutoSpawn)
             Spawn(null);
         //OnStartServer() 는 Connection 정보X , Start는 되네?
@@ -109,7 +112,7 @@ public class NetworkSpawner : NetworkBehaviour
     public void CallToServer(Transform trans, uint PlayerID)
     {
         {
-            if (ClientSpawnObjects.Exists(t => t == PlayerID))
+            if (ClientSpawnObjects.ContainsKey(PlayerID))
             {
                 //이미 스폰됨
                 DebugMessage("Already Spawn");
@@ -144,14 +147,27 @@ public class NetworkSpawner : NetworkBehaviour
         {
             if (id.isClient)
             {
-                ClientSpawnObjects.Add(PlayerID);                
+                ClientSpawnObjects.Add(PlayerID, obj.GetComponent<NetworkIdentity>().netId);
             }
         }//클라 생성리스트 (ClientSpawnObjects) 세팅
-        //========================================================NetworkServer.localConnection을 netID가져와서 등록해야함
 
         //NetworkServer.Spawn 하기전에 SpawnedID 설정하니깐 스폰문제생김 (클라 스폰 x)
     }
 
+    public string ClientSpawnObjectsToString()
+    {
+        uint[] keys = new uint[ClientSpawnObjects.Count];
+        string result = null;
+
+        ClientSpawnObjects.Keys.CopyTo(keys, 0);
+
+        for (int i = 0; i < ClientSpawnObjects.Count; i++)
+        {
+            result = result + "\n" + keys[i].ToString() + " : " + ClientSpawnObjects[keys[i]].ToString();
+        }
+
+        return result;
+    }
     void UpdateSpawn(uint oldId, uint newID)
     {
         if (! NetworkIdentity.spawned.ContainsKey(newID))
@@ -213,6 +229,11 @@ public class NetworkSpawnerEditor : Editor
         if (GUILayout.Button("Spawn"))
         {
             onwer.Spawn(null);
+        }
+
+        if (GUILayout.Button("ClientSpawnObjects"))
+        {
+            Debug.Log(onwer.ClientSpawnObjectsToString());
         }
     }
 }
