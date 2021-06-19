@@ -8,6 +8,9 @@ using UnityEditor;
 
 public class OptionalSyncVar : NetworkBehaviour//============제너릭 클래스, 상속용버전으로 나눌거임 , 일단 이건 상속버전으로
 {
+    //특정 스크립트를 가진 오브젝트를 찾아 값설정(AccessSync, AccessTarget) OR 특정 스크립트가 값설정
+    public Component FindComponent;
+
     [Header("Optional Sync Var")]
     public Component AccessSync;
     public string SyncVarName;
@@ -36,6 +39,8 @@ public class OptionalSyncVar : NetworkBehaviour//============제너릭 클래스, 상속
         {
             SyncData.ChangeData = ChangeSyncData;//이거 실행되고 에디터에서 초기화
         }
+
+        AccessSync = (Component)FindObjectOfType(FindComponent.GetType(), true);
     }
     [Server]
     public virtual object ChangeSyncData(object oldData, object newData)
@@ -44,7 +49,7 @@ public class OptionalSyncVar : NetworkBehaviour//============제너릭 클래스, 상속
         //전달 받은거 데이터 넘기고 AutoVarAccess.Get<>에서 확인
 
         Debug.Log("Receive event - Server | " + newData);
-        RPCTemp(newData);
+        RPCTemp(newData);//RPC가 object매개변수는 지원 안하나봄
 
         SyncData.Data = newData;
 
@@ -56,7 +61,7 @@ public class OptionalSyncVar : NetworkBehaviour//============제너릭 클래스, 상속
     [ClientRpc(includeOwner = true)]
     public virtual void RPCTemp(object Data)
     {
-        Debug.LogWarning("Receive Client : " + Data.GetType() + " : " + Data.ToString() + " | " + (string)Data);
+        //Debug.LogWarning("Receive Client : " + Data.GetType() + " : " + Data.ToString() + " | " + (string)Data);
         SyncData.Data = Data;
     }
 }

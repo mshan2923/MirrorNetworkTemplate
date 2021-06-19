@@ -42,14 +42,14 @@ public class studyGamePlayer : NetworkBehaviour
         }
     }
 
-    [Command]//클라이언트에서 호출 => 서버에서실행하는 메서드//requiresAuthority - 기본값 True => 소유하고 있는것만 명령내림
+    [Command]//클라이언트에서 호출 => 서버에서실행하는 메서드 (리턴형 void 고정, 제너릭 미지원) //requiresAuthority - 기본값 True => 소유하고 있는것만 명령내림
     void CmdMove(Vector3 vec)
     {
         //Validate logic here//유효확인 로직
 
         RpcMove(vec);//유효한지 확인하고 명령 수락 + 모든 클라이언트 동기화
     }
-    [ClientRpc]// 모든 클라이언트 동기화 //includeOwner - 차이 모르겠음, 설명 없음
+    [ClientRpc]// 모든 클라이언트 동기화 (서버가 명령 - 소유권 무시)//includeOwner - 차이 모르겠음, 설명 없음
     void RpcMove(Vector3 vec)
     {
         transform.Translate(vec);
