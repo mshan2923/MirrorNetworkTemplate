@@ -88,8 +88,10 @@ public class SteamNetworkManager : NetworkManager
     */
     #endregion
 
-    private void Start()
+    new private void Start()
     {
+        base.Start();
+
         StartHost();//이게 없으니 Mirror 작동X
         //SteamAPI work After Host();
     }

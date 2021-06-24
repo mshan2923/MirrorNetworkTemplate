@@ -24,12 +24,12 @@ EditorBuildSettings:
     path: Assets/Tutorial/5 - Network Proximity Checker/Checker Scene.unity
     guid: 388a7bc0256c8fd41b426a07dba0b8fc
   - enabled: 0
-    path: Assets/Tutorial/6 - Optional Sync/Disable/New Scene.unity
-    guid: f03296fa8d75af54dbd4f43ce7e1041c
-  - enabled: 0
-    path: Assets/Tutorial/6 - Optional Sync/NetWorkDelegeteTest/NetWorkDeleteScene.unity
-    guid: 8d1f4eecc0f682b4789b8beda2a019a8
-  - enabled: 1
     path: Assets/Tutorial/6 - Optional Sync/DistanceSync/DistanceSyncScene.unity
     guid: a25794d1202ce7343a5db94905503a34
+  - enabled: 0
+    path: Assets/Tutorial/7 - SyncList/SyncList Scene.unity
+    guid: f2f1274e0cafcd244bd8a885cab7e00e
+  - enabled: 1
+    path: Assets/Tutorial/8 - NetworkPool/NetworkPool Scene.unity
+    guid: 58c76b49540ccae4b9b3e1a221b23d75
   m_configObjects: {}

@@ -9,7 +9,7 @@ public struct Notification : NetworkMessage
 }
 public class StudyRoomPlayer : NetworkRoomPlayer
 {
-    private void Start()
+    new void  Start()
     {
         base.Start();
 
