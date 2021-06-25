@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Reflection;
 using System;
-using Mirror;
+//using Mirror;
 
 [Serializable]
 public class AutoVarAccess
@@ -73,7 +73,7 @@ public class AutoVarAccess
         else
             return default;
     }
-    [Command(requiresAuthority = false)]
+    //[Command(requiresAuthority = false)]
     public bool Set<T>(T data)
     {
         if (varType == typeof(T))
@@ -105,7 +105,7 @@ public class AutoVarAccess
             return null;
     }
 
-    [Command(requiresAuthority = false)]
+    //[Command(requiresAuthority = false)]
     void ChangeDataEvent<T>(T data)
     {
         //값 유효한지 검사// Set<> 으로 보낼때 비정상값 필터링
