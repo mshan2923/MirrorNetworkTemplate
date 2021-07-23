@@ -32,10 +32,9 @@ public class NetworkObjectPool : NetworkBehaviour
     [Server]
     private GameObject Generator()
     {
-        Debug.Log("Generator Event");
-
         GameObject obj = GameObject.Instantiate(PoolObject, Vector3.zero, Quaternion.identity);
         //PoolObjNetID.Add(obj.GetComponent<NetworkIdentity>().netId);//PoolObjNetID 에 정보 입력
+
         EventGenrate(obj);
         NetworkServer.Spawn(obj);
         return obj;
@@ -77,7 +76,6 @@ public class NetworkObjectPool : NetworkBehaviour
 
         if (ActivePool < PoolAmount || PoolAmount < 0)
         {
-            Debug.Log("Spawn Start");
             obj = pool.Take();
 
             EventGenrate(obj);

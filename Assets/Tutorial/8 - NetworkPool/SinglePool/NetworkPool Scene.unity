@@ -213,7 +213,7 @@ MonoBehaviour:
   serverBatching: 1
   serverBatchInterval: 0
   offlineScene: 
-  onlineScene: Assets/Tutorial/8 - NetworkPool/NetworkPool Scene.unity
+  onlineScene: 
   transport: {fileID: 242372629}
   networkAddress: localhost
   maxConnections: 100
