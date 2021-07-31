@@ -9,13 +9,14 @@ public class NetworkSpawner : NetworkBehaviour
     public GameObject SpawnObject;
 
     public bool AutoSpawn = true;
-    public bool ClientObject_Spawn = false;
+    public bool ClientSpawn = false;
 
-    Dictionary<uint, uint> ClientSpawnObjects;//Server Only - 서버에서 PlayerID , ObjectID 를 리스트로 저장해서 관리
+    Dictionary<uint, uint> ClientSpawnObjects;//Server Only - 서버에서 PlayerID , Object.NetID 를 리스트로 저장해서 관리 - 여러개인경우 문제 발생!
+    //NetID, PlayerID 이였으면 , 그런데 굳이 있어 봤자
 
-    public bool RemoveObjectWhenDisconnect = true;
-
+    public bool RemoveObjectWhenDisconnect = true;//not use
     //클라 연결끊킬때 소유물제거 되는건 NetManager에서 , 스폰된 오브젝트의 OnStopClient 연결해서 써도 될듯
+
     #region 구조체의 멤버가 uint일때 사용시 에러
     /*
     struct ClientID
@@ -63,7 +64,7 @@ public class NetworkSpawner : NetworkBehaviour
 
     public override void OnStopClient() 
     {
-
+        //NetworkIdentity.spawned[]
     }
 
     private void Start()
@@ -91,7 +92,7 @@ public class NetworkSpawner : NetworkBehaviour
                 DebugMessage("SpawnObjectEvent_id : " + NetworkServer.localConnection + "| Connect : " + NetworkServer.connections.Count);
             }
         }
-        if (isClient && NetworkClient.ready && ClientObject_Spawn)
+        if (isClient && NetworkClient.ready && ClientSpawn)
         {
             if (NetworkClient.connection == null)
             {

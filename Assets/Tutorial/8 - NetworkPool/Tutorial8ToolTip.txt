@@ -1,0 +1,7 @@
+MutiPool, SinglePool Has Error (Spawn Error to Delaied Join)
+
+나중에 참가시 오브젝트가 제대로 동기화X (MutiPool, SinglePool)
+
+SpawnManager는 서버만 오브젝트풀 , 클라는 그냥 스폰 
+   |- 여러 오브젝트를 관리, 스폰 오브젝트 자동 등록, 싱글톤 사용
+   |- NetworkSpawner와 무관 , 오히려 업글버전
