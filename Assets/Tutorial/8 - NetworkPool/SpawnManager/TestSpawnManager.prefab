@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8477923463724328257}
   - component: {fileID: 8477923463724328256}
-  - component: {fileID: 8477923463724328271}
+  - component: {fileID: 3552465488725620834}
   m_Layer: 0
   m_Name: TestSpawnManager
   m_TagString: Untagged
@@ -49,7 +49,7 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &8477923463724328271
+--- !u!114 &3552465488725620834
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,15 +58,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 8477923463724328270}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1650dd38b3f5f314d8ca964c6696a093, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fc2b737634871244bf2bfa1d62a2da1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
   Spawns:
-  - SpawnObject: {fileID: 367930136218686763, guid: 288e075a6e54bf248a63cb932dcb5863, type: 3}
+  - Title: Debug Object
+    SpawnObject: {fileID: 367930136218686763, guid: 288e075a6e54bf248a63cb932dcb5863, type: 3}
     ActiveList: []
     ActiveAmount: 0
     MaxSpawnAmount: 5
-    AutoSpawn: 1
+    AutoResize: 1
+    AutoSpawn: 0
     ClientSpawn: 1
+  DebugSpawnPos: 1

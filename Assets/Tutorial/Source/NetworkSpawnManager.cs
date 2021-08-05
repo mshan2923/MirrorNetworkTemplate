@@ -9,12 +9,14 @@ public class NetworkSpawnManager : NetworkBehaviour
     [System.Serializable]
     public class SpawnSlot
     {
+        public string Title;
         public GameObject SpawnObject;
         Queue<GameObject> Pool = new Queue<GameObject>();
         public List<GameObject> ActiveList = new List<GameObject>();//(Object.NetID) - Server Only
         public int ActiveAmount = 0;
         public int MaxSpawnAmount = 1;//0미만 이면 무제한
 
+        public bool AutoResize = false;//참일때 최대치 달성시 새로운 풀 생성
         public bool AutoSpawn = false;//시작할때 1개 스폰
         public bool ClientSpawn = true;
 
@@ -44,10 +46,30 @@ public class NetworkSpawnManager : NetworkBehaviour
                 Obj.SetActive(true);
                 ActiveAmount++;
                 if (ClientSpawn)
+                {
                     NetworkServer.Spawn(Obj, Obj.GetComponent<NetworkIdentity>().assetId, NetworkServer.localConnection);
+                }
+
                 return true;
             }else
             {
+                if (AutoResize)
+                {
+                    Obj = GameObject.Instantiate(SpawnObject, Vector3.zero, Quaternion.identity);
+                    ActiveList.Add(Obj);
+                    Obj.SetActive(true);
+
+                    MaxSpawnAmount++;
+                    ActiveAmount = MaxSpawnAmount;
+
+                    if (ClientSpawn)
+                    {
+                        NetworkServer.Spawn(Obj, Obj.GetComponent<NetworkIdentity>().assetId, NetworkServer.localConnection);
+                    }
+
+                    return true;
+                }
+
                 Obj = null;
                 return false;
             }
@@ -63,20 +85,10 @@ public class NetworkSpawnManager : NetworkBehaviour
             //NetworkServer.Destroy(Obj);//=====================서버도 제거되서...
             NetworkServer.UnSpawn(Obj);//....그냥 이걸로하면 비활성화 됨...  ㅅㅂㅋㅋ
         }
-
-        public GameObject TestSpawnEvent(SpawnMessage msg)
-        {
-            NetworkIdentity.print("TestSpawn");
-            return null;
-        }
-        public void TestDespawnEvent(GameObject Obj)
-        {
-            NetworkIdentity.print("TestDespawn");
-        }
     }
 
     public List<SpawnSlot> Spawns = new List<SpawnSlot>();
-    public bool DebugSpawnPos = false;
+    public bool DebugSpawnPos = false;//활성화갯수 의한 위치설정 이므로 겹쳐서 스폰 가능
 
     private void OnEnable()
     {
@@ -132,7 +144,6 @@ public class NetworkSpawnManager : NetworkBehaviour
         Spawns[index].Despawn(obj);
     }
 
-
 }
 
 #if UNITY_EDITOR
@@ -162,16 +173,8 @@ public class NetworkSpawnManagerEditor : Editor
                 }
             }
         }
+        EditorGUILayout.HelpBox("Must Add NetManager.SpawnPrefabs", MessageType.Info);
 
-        if (GUILayout.Button("Spawn 0"))
-        {
-            Onwer.Spawn(0);
-        }
-        if (GUILayout.Button("Despawn 0"))
-        {
-            if (Onwer.Spawns[0].ActiveList.Count > 0)
-                Onwer.Despawn(0, Onwer.Spawns[0].ActiveList[0]);
-        }
     }
 }
 #endif
