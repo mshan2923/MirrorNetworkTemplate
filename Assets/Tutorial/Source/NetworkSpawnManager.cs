@@ -151,6 +151,18 @@ public class NetworkSpawnManager : NetworkBehaviour
         Spawns[index].Despawn(obj);
     }
 
+    public void AddSpawnObject()
+    {
+        NetworkManager.singleton.spawnPrefabs.Add(gameObject);
+
+        for (int i = 0; i < Spawns.Count; i++)
+        {
+            if (NetworkManager.singleton.spawnPrefabs.Exists(t => t == Spawns[i].SpawnObject))
+            {
+                NetworkManager.singleton.spawnPrefabs.Add(Spawns[i].SpawnObject);
+            }
+        }
+    }
 }
 
 #if UNITY_EDITOR
@@ -166,19 +178,7 @@ public class NetworkSpawnManagerEditor : Editor
 
         if (GUILayout.Button("Set SpawnObject"))
         {
-            var netManager = FindObjectOfType<NetworkManager>();
-
-            netManager.spawnPrefabs.Add(Onwer.gameObject);
-
-            for (int i = 0; i < Onwer.Spawns.Count; i++)
-            {
-                //NetworkManager.singleton.spawnPrefabs.Add(Onwer.Spawns[i].SpawnObject);//인게임에선
-
-                if (! netManager.spawnPrefabs.Exists(t=> t == Onwer.Spawns[i].SpawnObject))
-                {
-                    netManager.spawnPrefabs.Add(Onwer.Spawns[i].SpawnObject);
-                }
-            }
+            Onwer.AddSpawnObject();
         }
         EditorGUILayout.HelpBox("Must Add NetManager.SpawnPrefabs", MessageType.Info);
 
