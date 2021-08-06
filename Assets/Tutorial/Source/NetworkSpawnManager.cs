@@ -90,6 +90,9 @@ public class NetworkSpawnManager : NetworkBehaviour
     public List<SpawnSlot> Spawns = new List<SpawnSlot>();
     public bool DebugSpawnPos = false;//활성화갯수 의한 위치설정 이므로 겹쳐서 스폰 가능
 
+    public delegate void SpawnDelegate(int Index, GameObject Obj);
+    public SpawnDelegate SpawnEvent;
+
     private void OnEnable()
     {
         for (int i = 0; i < Spawns.Count; i++)
@@ -128,6 +131,10 @@ public class NetworkSpawnManager : NetworkBehaviour
         if (Spawns[index].ActiveAmount > 0 && Obj != null && DebugSpawnPos)//첫번째가 아니고 + 유효 + DebugSpawnPos
             Obj.transform.position = Vector3.right * (Spawns[index].ActiveAmount - 1);
 
+        if (SpawnEvent != null)
+        {
+            SpawnEvent.Invoke(index, Obj);
+        }
     }
 
 
