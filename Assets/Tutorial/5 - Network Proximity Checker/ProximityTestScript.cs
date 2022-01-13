@@ -79,9 +79,9 @@ public class ProximityTestScript : NetworkBehaviour
     [ClientRpc(includeOwner = true)]
     void OnChangeColorClient(uint NetID, Color color)
     {
-        if (NetworkIdentity.spawned.ContainsKey(NetID))
+        if (NetworkServer.spawned.ContainsKey(NetID))
         {
-            var ObjId = NetworkIdentity.spawned[NetID];
+            var ObjId = NetworkServer.spawned[NetID];
             ObjId.gameObject.GetComponent<Renderer>().material.color = color;
         }else
         {

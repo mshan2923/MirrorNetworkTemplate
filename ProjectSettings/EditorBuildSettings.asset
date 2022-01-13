@@ -5,16 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Tutorial/1 - DataSync/Scene/StudyMainMenu Scene.unity
     guid: 082b3428d99cbaf4ab67e781170d0b32
-  - enabled: 0
+  - enabled: 1
     path: Assets/Tutorial/1 - DataSync/Scene/StudyLobbyScene.unity
     guid: 4767317060e592d499d961beb58e8639
-  - enabled: 0
+  - enabled: 1
     path: Assets/Tutorial/1 - DataSync/Scene/StudyRoomScence.unity
     guid: 28958d68735891e468f81317a2294cb9
-  - enabled: 0
+  - enabled: 1
     path: Assets/Tutorial/1 - DataSync/Scene/StudyGameSceane.unity
     guid: 8b68fe7a4ec05c249bf7b0892d64b1db
   - enabled: 0

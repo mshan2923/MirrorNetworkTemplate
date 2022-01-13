@@ -126,7 +126,7 @@ public class Test_NetManager : NetworkManager
         {
             //NetworkClient.connection.clientOwnedObjects.Count
 
-            foreach (var i in NetworkIdentity.spawned)
+            foreach (var i in NetworkServer.spawned)
             {
                 if (i.Value.gameObject.GetComponent<NetworkConnectCheck>() != null)
                     i.Value.gameObject.GetComponent<NetworkConnectCheck>().RecieveToManager();

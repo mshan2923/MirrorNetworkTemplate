@@ -64,7 +64,7 @@ public class NetworkSpawner : NetworkBehaviour
 
     public override void OnStopClient() 
     {
-        //NetworkIdentity.spawned[]
+        //NetworkServer.spawned[]
     }
 
     private void Start()
@@ -133,8 +133,8 @@ public class NetworkSpawner : NetworkBehaviour
         NetworkIdentity id = null;
         if (PlayerID != new uint())
         {
-            if (NetworkIdentity.spawned.ContainsKey(PlayerID))
-                id = NetworkIdentity.spawned[PlayerID];
+            if (NetworkServer.spawned.ContainsKey(PlayerID))
+                id = NetworkServer.spawned[PlayerID];
         }
 
         var obj = GameObject.Instantiate(SpawnObject, trans);
@@ -171,10 +171,10 @@ public class NetworkSpawner : NetworkBehaviour
     }
     void UpdateSpawn(uint oldId, uint newID)
     {
-        if (! NetworkIdentity.spawned.ContainsKey(newID))
+        if (! NetworkServer.spawned.ContainsKey(newID))
         {
             NetworkIdentity id = null;
-            if (NetworkIdentity.spawned.TryGetValue(newID, out id))
+            if (NetworkServer.spawned.TryGetValue(newID, out id))
             {
                 //id.connectionToServer//===NetworkConnection
             }

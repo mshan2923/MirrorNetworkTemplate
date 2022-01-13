@@ -1,6 +1,5 @@
 // vis2k: GUILayout instead of spacey += ...; removed Update hotkeys to avoid
 // confusion if someone accidentally presses one.
-using System;
 using UnityEngine;
 
 namespace Mirror
@@ -9,13 +8,10 @@ namespace Mirror
     [DisallowMultipleComponent]
     [AddComponentMenu("Network/NetworkManagerHUD")]
     [RequireComponent(typeof(NetworkManager))]
-    [HelpURL("https://mirror-networking.com/docs/Articles/Components/NetworkManagerHUD.html")]
+    [HelpURL("https://mirror-networking.gitbook.io/docs/components/network-manager-hud")]
     public class NetworkManagerHUD : MonoBehaviour
     {
         NetworkManager manager;
-
-        [Obsolete("showGUI will be removed unless someone has a valid use case. Simply use or don't use the HUD component.")]
-        public bool showGUI = true;
 
         public int offsetX;
         public int offsetY;
@@ -27,10 +23,6 @@ namespace Mirror
 
         void OnGUI()
         {
-#pragma warning disable 618
-            if (!showGUI) return;
-#pragma warning restore 618
-
             GUILayout.BeginArea(new Rect(10 + offsetX, 40 + offsetY, 215, 9999));
             if (!NetworkClient.isConnected && !NetworkServer.active)
             {
@@ -78,6 +70,7 @@ namespace Mirror
                 {
                     manager.StartClient();
                 }
+                // This updates networkAddress every frame from the TextField
                 manager.networkAddress = GUILayout.TextField(manager.networkAddress);
                 GUILayout.EndHorizontal();
 
@@ -95,7 +88,7 @@ namespace Mirror
             else
             {
                 // Connecting
-                GUILayout.Label("Connecting to " + manager.networkAddress + "..");
+                GUILayout.Label($"Connecting to {manager.networkAddress}..");
                 if (GUILayout.Button("Cancel Connection Attempt"))
                 {
                     manager.StopClient();
@@ -105,14 +98,23 @@ namespace Mirror
 
         void StatusLabels()
         {
-            // server / client status message
-            if (NetworkServer.active)
+            // host mode
+            // display separately because this always confused people:
+            //   Server: ...
+            //   Client: ...
+            if (NetworkServer.active && NetworkClient.active)
             {
-                GUILayout.Label("Server: active. Transport: " + Transport.activeTransport);
+                GUILayout.Label($"<b>Host</b>: running via {Transport.activeTransport}");
             }
-            if (NetworkClient.isConnected)
+            // server only
+            else if (NetworkServer.active)
             {
-                GUILayout.Label("Client: address=" + manager.networkAddress);
+                GUILayout.Label($"<b>Server</b>: running via {Transport.activeTransport}");
+            }
+            // client only
+            else if (NetworkClient.isConnected)
+            {
+                GUILayout.Label($"<b>Client</b>: connected to {manager.networkAddress} via {Transport.activeTransport}");
             }
         }
 

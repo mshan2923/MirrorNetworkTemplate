@@ -30,7 +30,7 @@ public class ObjPoolSlot
     [Server]
     void ServerSetUp()
     {
-        pool = new Pool<GameObject>(Generator);
+        pool = new Pool<GameObject>(Generator, 0);
     }
     [Server]
     private GameObject Generator()
@@ -163,10 +163,10 @@ public class NetworkMutiObjectPool : NetworkBehaviour
     [Server]
     public void Command_DeSpawn(int index, uint NetId)
     {
-        if (!NetworkIdentity.spawned.ContainsKey(NetId))
+        if (!NetworkServer.spawned.ContainsKey(NetId))
             Debug.LogWarning("NetID is't Vaild");
 
-        GameObject Obj = NetworkIdentity.spawned[NetId].gameObject;
+        GameObject Obj = NetworkServer.spawned[NetId].gameObject;
 
         if (ObjPools[index].ActivePool > 0)
         {
@@ -182,9 +182,9 @@ public class NetworkMutiObjectPool : NetworkBehaviour
     [ClientRpc(includeOwner = true)]
     public void SyncClientTransform(uint netID, Vector3 Pos, Quaternion Rot)
     {
-        if (NetworkIdentity.spawned.ContainsKey(netID))
+        if (NetworkServer.spawned.ContainsKey(netID))
         {
-            var obj = NetworkIdentity.spawned[netID].gameObject;
+            var obj = NetworkServer.spawned[netID].gameObject;
             obj.transform.position = Pos;
             obj.transform.rotation = Rot;
         }else
@@ -195,9 +195,9 @@ public class NetworkMutiObjectPool : NetworkBehaviour
     [ClientRpc(includeOwner = true)]
     public void ClientSetActive(bool Active, int index, uint netID)
     {
-        if (NetworkIdentity.spawned.ContainsKey(netID))
+        if (NetworkServer.spawned.ContainsKey(netID))
         {
-            var id = NetworkIdentity.spawned[netID];
+            var id = NetworkServer.spawned[netID];
 
             if (Active)
             {
@@ -222,9 +222,9 @@ public class NetworkMutiObjectPool : NetworkBehaviour
 
             Test(netID);//되는듯?? , 각종 설정(active, 초기 위치설정 안되나?)
 
-            if (NetworkIdentity.spawned.ContainsKey(netID))
+            if (NetworkServer.spawned.ContainsKey(netID))
             {
-                var id = NetworkIdentity.spawned[netID];
+                var id = NetworkServer.spawned[netID];
 
                 if (Active)
                 {
@@ -249,7 +249,7 @@ public class NetworkMutiObjectPool : NetworkBehaviour
         yield return new WaitForEndOfFrame();
 
         Debug.LogWarning("waiting : " + WaitingForSpawn);//=====도중에 들어온 클라는 첨에 보인거 그이상으로 스폰X
-        if (NetworkIdentity.spawned.ContainsKey(netID))
+        if (NetworkServer.spawned.ContainsKey(netID))
         {
             WaitingForSpawn--;
             ClientSetActive(Active, index, netID);
@@ -263,9 +263,9 @@ public class NetworkMutiObjectPool : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void Test(uint netID)
     {
-        if (NetworkIdentity.spawned.ContainsKey(netID))
+        if (NetworkServer.spawned.ContainsKey(netID))
         {
-            NetworkServer.Spawn(NetworkIdentity.spawned[netID].gameObject, NetworkServer.localConnection);
+            NetworkServer.Spawn(NetworkServer.spawned[netID].gameObject, NetworkServer.localConnection);
 
             NetworkIdentity.print("Recall Spawn");//---xxxxx
         }

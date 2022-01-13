@@ -25,7 +25,7 @@ public class NetworkObjectPool : NetworkBehaviour
     {
         if (isServer)
         {
-            pool = new Pool<GameObject>(Generator);
+            pool = new Pool<GameObject>(Generator, 0);
             //PoolObjNetID = new List<uint>();
         }
     }
@@ -57,9 +57,9 @@ public class NetworkObjectPool : NetworkBehaviour
     [ClientRpc(includeOwner = true)]
     void UpdateObjectPosition(uint netID, Vector3 Pos, Quaternion Rot)
     {
-        if (NetworkIdentity.spawned.ContainsKey(netID))
+        if (NetworkServer.spawned.ContainsKey(netID))
         {
-            var obj = NetworkIdentity.spawned[netID].gameObject;
+            var obj = NetworkServer.spawned[netID].gameObject;
             obj.transform.position = Pos;
             obj.transform.rotation = Rot;
         }
@@ -71,7 +71,7 @@ public class NetworkObjectPool : NetworkBehaviour
         GameObject obj = null;
         if (pool == null)
         {
-            pool = new Pool<GameObject>(Generator);
+            pool = new Pool<GameObject>(Generator, 0);
         }
 
         if (ActivePool < PoolAmount || PoolAmount < 0)
@@ -91,7 +91,7 @@ public class NetworkObjectPool : NetworkBehaviour
     [ClientRpc(includeOwner = true)]
     void ActiveClientObject(uint netID)
     {
-        var id = NetworkIdentity.spawned[netID];
+        var id = NetworkServer.spawned[netID];
 
         EventGenrate(id.gameObject);
     }
@@ -111,7 +111,7 @@ public class NetworkObjectPool : NetworkBehaviour
     [ClientRpc(includeOwner = true)]
     void DeactiveClientObject(uint netID)
     {
-        var id = NetworkIdentity.spawned[netID];
+        var id = NetworkServer.spawned[netID];
 
         id.gameObject.SetActive(false);
     }

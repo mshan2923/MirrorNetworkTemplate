@@ -26,7 +26,7 @@ public class TestSyncList : NetworkBehaviour
 
     private void Update()
     {
-        if (list.IsDirty)
+        if (list.IsRecording())
         {
             if (isServer)
             {

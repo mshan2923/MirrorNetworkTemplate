@@ -18,7 +18,7 @@ namespace Mirror.Authenticators
         public void Awake()
         {
             authenticator.OnServerAuthenticated.AddListener(connection => OnServerAuthenticated.Invoke(connection));
-            authenticator.OnClientAuthenticated.AddListener(connection => OnClientAuthenticated.Invoke(connection));
+            authenticator.OnClientAuthenticated.AddListener(OnClientAuthenticated.Invoke);
         }
 
         public override void OnStartServer()
@@ -48,23 +48,21 @@ namespace Mirror.Authenticators
                 StartCoroutine(BeginAuthentication(conn));
         }
 
-        public override void OnClientAuthenticate(NetworkConnection conn)
+        public override void OnClientAuthenticate()
         {
-            authenticator.OnClientAuthenticate(conn);
+            authenticator.OnClientAuthenticate();
             if (timeout > 0)
-                StartCoroutine(BeginAuthentication(conn));
+                StartCoroutine(BeginAuthentication(NetworkClient.connection));
         }
 
         IEnumerator BeginAuthentication(NetworkConnection conn)
         {
-            // Debug.Log($"Authentication countdown started {conn} {timeout}");
-
+            //Debug.Log($"Authentication countdown started {conn} {timeout}");
             yield return new WaitForSecondsRealtime(timeout);
 
             if (!conn.isAuthenticated)
             {
-                // Debug.Log($"Authentication Timeout {conn}");
-
+                Debug.LogError($"Authentication Timeout - Disconnecting {conn}");
                 conn.Disconnect();
             }
         }

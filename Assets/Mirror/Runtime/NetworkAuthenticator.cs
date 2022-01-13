@@ -7,7 +7,7 @@ namespace Mirror
     [Serializable] public class UnityEventNetworkConnection : UnityEvent<NetworkConnection> {}
 
     /// <summary>Base class for implementing component-based authentication during the Connect phase</summary>
-    [HelpURL("https://mirror-networking.com/docs/Articles/Guides/Authentication.html")]
+    [HelpURL("https://mirror-networking.gitbook.io/docs/components/network-authenticators")]
     public abstract class NetworkAuthenticator : MonoBehaviour
     {
         /// <summary>Notify subscribers on the server when a client is authenticated</summary>
@@ -17,7 +17,7 @@ namespace Mirror
 
         /// <summary>Notify subscribers on the client when the client is authenticated</summary>
         [Tooltip("Mirror has an internal subscriber to this event. You can add your own here.")]
-        public UnityEventNetworkConnection OnClientAuthenticated = new UnityEventNetworkConnection();
+        public UnityEvent OnClientAuthenticated = new UnityEvent();
 
         /// <summary>Called when server starts, used to register message handlers if needed.</summary>
         public virtual void OnStartServer() {}
@@ -45,34 +45,38 @@ namespace Mirror
         public virtual void OnStopClient() {}
 
         /// <summary>Called on client from OnClientAuthenticateInternal when a client needs to authenticate</summary>
-        // TODO client callbacks don't need NetworkConnection parameter. use NetworkClient.connection!
-        public abstract void OnClientAuthenticate(NetworkConnection conn);
+        public abstract void OnClientAuthenticate();
 
-        // TODO client callbacks don't need NetworkConnection parameter. use NetworkClient.connection!
-        protected void ClientAccept(NetworkConnection conn)
+        protected void ClientAccept()
         {
-            OnClientAuthenticated.Invoke(conn);
+            OnClientAuthenticated.Invoke();
         }
 
-        // TODO client callbacks don't need NetworkConnection parameter. use NetworkClient.connection!
-        protected void ClientReject(NetworkConnection conn)
+        protected void ClientReject()
         {
             // Set this on the client for local reference
-            conn.isAuthenticated = false;
+            NetworkClient.connection.isAuthenticated = false;
 
             // disconnect the client
-            conn.Disconnect();
+            NetworkClient.connection.Disconnect();
         }
-
-        void OnValidate()
+        
+        // Reset() instead of OnValidate():
+        // Any NetworkAuthenticator assigns itself to the NetworkManager, this is fine on first adding it, 
+        // but if someone intentionally sets Authenticator to null on the NetworkManager again then the 
+        // Authenticator will reassign itself if a value in the inspector is changed.
+        // My change switches OnValidate to Reset since Reset is only called when the component is first 
+        // added (or reset is pressed).
+        void Reset()
         {
 #if UNITY_EDITOR
             // automatically assign authenticator field if we add this to NetworkManager
             NetworkManager manager = GetComponent<NetworkManager>();
             if (manager != null && manager.authenticator == null)
             {
+                // undo has to be called before the change happens
+                UnityEditor.Undo.RecordObject(manager, "Assigned NetworkManager authenticator");
                 manager.authenticator = this;
-                UnityEditor.Undo.RecordObject(gameObject, "Assigned NetworkManager authenticator");
             }
 #endif
         }
