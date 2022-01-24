@@ -28,6 +28,7 @@ public class DebugNetSpawnManager : NetworkSpawnManager
     #endregion
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(DebugNetSpawnManager))]
 public class DebugSpawnManagerEditor : Editor
 {
@@ -90,3 +91,4 @@ public class DebugSpawnManagerEditor : Editor
     //여기서 Command 함수 쓸경우//클라에서 서버에게 넘겼는데 왜? 실행이 -> 서버가 활성화 안됨 =>> UNITY_EDITOR 때문에 빌드시 제거됨
     //Command 함수 리턴형이 무조건 void 이여야함
 }
+#endif

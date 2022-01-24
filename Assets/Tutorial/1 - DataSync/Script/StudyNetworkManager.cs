@@ -59,9 +59,9 @@ public class StudyNetworkManager : NetworkRoomManager
     }    //서버에서만 생성후 호출하면 클라이언트도 자동생성 (NetworkServer.Spawn) // 서버에서 스폰되서 소유권은 서버 , 클라이언트가 변경이 동기화X
 
     #region RegisterHandler / Send
-    public override void OnRoomClientConnect(NetworkConnection conn)
+    public override void OnRoomClientConnect()
     {
-        base.OnRoomClientConnect(conn);
+        base.OnRoomClientConnect();
 
         StartCoroutine(delay());
     }

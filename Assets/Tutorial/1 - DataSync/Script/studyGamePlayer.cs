@@ -49,7 +49,7 @@ public class studyGamePlayer : NetworkBehaviour
 
         RpcMove(vec);//유효한지 확인하고 명령 수락 + 모든 클라이언트 동기화
     }
-    [ClientRpc]// 모든 클라이언트 동기화 (서버가 명령 - 소유권 무시)//includeOwner - 차이 모르겠음, 설명 없음
+    [ClientRpc]// 모든 클라이언트 동기화 (서버가 명령 - 소유권 무시)//includeOwner
     void RpcMove(Vector3 vec)
     {
         transform.Translate(vec);

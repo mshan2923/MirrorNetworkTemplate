@@ -112,9 +112,9 @@ public class OptionalSyncNetManager : NetworkManager
     /// <para>Scene changes can cause player objects to be destroyed. The default implementation of OnClientSceneChanged in the NetworkManager is to add a player object for the connection if no player object exists.</para>
     /// </summary>
     /// <param name="conn">The network connection that the scene change message arrived on.</param>
-    public override void OnClientSceneChanged(NetworkConnection conn)
+    public override void OnClientSceneChanged()
     {
-        base.OnClientSceneChanged(conn);
+        base.OnClientSceneChanged();
     }
 
     #endregion
@@ -167,9 +167,9 @@ public class OptionalSyncNetManager : NetworkManager
     /// <para>The default implementation of this function sets the client as ready and adds a player. Override the function to dictate what happens when the client connects.</para>
     /// </summary>
     /// <param name="conn">Connection to the server.</param>
-    public override void OnClientConnect(NetworkConnection conn)
+    public override void OnClientConnect()
     {
-        base.OnClientConnect(conn);
+        base.OnClientConnect();
     }
 
     /// <summary>
@@ -177,9 +177,9 @@ public class OptionalSyncNetManager : NetworkManager
     /// <para>This is called on the client when it disconnects from the server. Override this function to decide what happens when the client disconnects.</para>
     /// </summary>
     /// <param name="conn">Connection to the server.</param>
-    public override void OnClientDisconnect(NetworkConnection conn)
+    public override void OnClientDisconnect()
     {
-        base.OnClientDisconnect(conn);
+        base.OnClientDisconnect();
     }
 
     /// <summary>
@@ -187,7 +187,7 @@ public class OptionalSyncNetManager : NetworkManager
     /// <para>This is commonly used when switching scenes.</para>
     /// </summary>
     /// <param name="conn">Connection to the server.</param>
-    public override void OnClientNotReady(NetworkConnection conn) { }
+    public override void OnClientNotReady() { }
 
     #endregion
 
