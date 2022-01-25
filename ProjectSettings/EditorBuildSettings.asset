@@ -17,7 +17,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Tutorial/1 - DataSync/Scene/StudyGameSceane.unity
     guid: 8b68fe7a4ec05c249bf7b0892d64b1db
-  - enabled: 1
+  - enabled: 0
     path: Assets/Tutorial/4 - ChildObj/ChildObj Scene.unity
     guid: eac0c5d129091014a9183557c7583bc2
   - enabled: 0
@@ -35,7 +35,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Tutorial/8 - NetworkPool/MutiPool/MutiObjecPool.unity
     guid: e63f581b3435e534dba67494108889bf
-  - enabled: 1
+  - enabled: 0
     path: Assets/Tutorial/8 - NetworkPool/SpawnManager/8 - SpawnManager.unity
     guid: f0566176bc311d4419461a9185eaa2ee
+  - enabled: 1
+    path: Assets/Tutorial/6 - Optional Sync/TargetRPC/Tutorial6_TaretRPC.unity
+    guid: 16712eb4793ef1c48b94acd7dc87c3c6
   m_configObjects: {}

@@ -1,4 +1,5 @@
 >>Need Research! Can Improve Script
+Just Hidden out of distance
 
 NetworkIdentity컴포넌트를 가진 오브젝트가 플레이어(NetworkConnectionToClient - identity)기준 일정거리 벗어난 경우 
 서버 => MeshRender가 비활성화, SyncVar등은 정상작동

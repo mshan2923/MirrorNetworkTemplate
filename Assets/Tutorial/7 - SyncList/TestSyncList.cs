@@ -10,7 +10,7 @@ public class TestSyncList : NetworkBehaviour
 
     //SyncSet
     //SyncDictionary
-    public SyncList<string> list = new SyncList<string>();
+    SyncList<string> list = new SyncList<string>();
     //https://github.com/vis2k/Mirror/blob/master/Assets/Mirror/Runtime/SyncList.cs/#L27
 
     void Start()
@@ -20,18 +20,26 @@ public class TestSyncList : NetworkBehaviour
         //도중에 클라 들어왔을때 이미 있는 데이터를 TextMesh에 띄우는건 귀찮아서...
         //그래서 아래있는 코드(list.Add)는 서버가 시작될때 1번 실행
 
+        list.OnDirty += new System.Action(OnDirty);
+
         if ( isServer)//isServerOnly - 서버도 실행 안되었음
             list.Add("Test " + list.Count);
+
     }
 
     private void Update()
     {
-        if (list.IsRecording())
+        if (list.IsRecording())//always true
         {
-            if (isServer)
-            {
-                DebugLogToClient("Added" + list.Count);
-            }
+
+        }
+    }
+
+    void OnDirty()
+    {
+        if (isServer)
+        {
+            DebugLogToClient("Added" + list.Count);
         }
     }
 

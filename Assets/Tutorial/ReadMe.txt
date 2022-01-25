@@ -7,11 +7,14 @@ Steam API - Mirror ver : https://github.com/Chykary/FizzySteamworks/
 4 - Child Obj =>> NetworkTransformChild is Not Work! , Mirror Not Surpport ChildObj
               =>> No Destroy Client Own Object when Disconnect Client
                   => Remove Ownner, Move Ownner
-5 - NetworkProximityChecker =>> ( NetworkProximityChecker > DistanceInterestManagement )
+5 - NetworkProximityChecker 
+ 	NetworkProximityChecker > Just Hidden Object 
+	TargetRPC   >  OptionalSync  (Tutorial 6)
+7 - SyncList<T>
 
 -----
 
-Network Proximity Checker + Delay Sync
+
 
 -----
 if Use NetworkRoomManager , Equally OnlineScene to RoomScene

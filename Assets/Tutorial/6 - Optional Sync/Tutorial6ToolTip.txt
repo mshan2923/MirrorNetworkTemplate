@@ -1,5 +1,4 @@
-This Tutorial is DistancSync Folder
-OptionalSync is Not Work
+Improve : NetworkDelegate > DistnaceSync > TargetRPC
 
 모든 클라가 특정조건에 맞지 않으면 동기화 중단 - 각자 할려 했으나 실패
 OptionalSync를 쓸때 다른 클래스에서 접근해서 관리

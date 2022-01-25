@@ -35,9 +35,9 @@ public class Test_NetManager : NetworkManager
 
         ServerDebug += ("conn : " + conn.connectionId + "\n");
     }
-    public override void OnClientConnect(NetworkConnection conn)
+    public override void OnClientConnect()
     {
-        base.OnClientConnect(conn);
+        base.OnClientConnect();
 
         //var temp = GameObject.Instantiate(spawnPrefabs[0]);
         //NetworkServer.Spawn(temp);// No "conn" , Use "conn.identity.connectionToClient"
