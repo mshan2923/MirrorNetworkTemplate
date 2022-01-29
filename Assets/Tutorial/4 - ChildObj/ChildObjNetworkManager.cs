@@ -13,8 +13,6 @@ public class ChildObjNetworkManager : NetworkManager
 {
     public float SpawnRadius = 2f;
 
-    //=============================== 문제 발생!!  클라 위치 업뎃안됨 , 자식 오브젝트도 안됨
-
     public override void Start()
     {
         base.Start();
@@ -40,28 +38,31 @@ public class ChildObjNetworkManager : NetworkManager
 
         GameObject Player = conn.identity.gameObject;
 
-        /*
-        for (int i = 0; i < Ids.Length; i++)
         {
-            if (Ids[i] != conn.identity)
-            {
-                Ids[i].RemoveClientAuthority();//소유권 제거
-                Ids[i].AssignClientAuthority(NetworkServer.localConnection);// 소유권 이동
-            }//Connect's Main Object(Player) is't Ids[i] -> 플래이어는 소유권제거 OR 이동불가
-        }*/
+            /*
+for (int i = 0; i < Ids.Length; i++)
+{
+    if (Ids[i] != conn.identity)
+    {
+        Ids[i].RemoveClientAuthority();//소유권 제거
+        Ids[i].AssignClientAuthority(NetworkServer.localConnection);// 소유권 이동
+    }//Connect's Main Object(Player) is't Ids[i] -> 플래이어는 소유권제거 OR 이동불가
+}*/
 
-        //base.OnServerDisconnect(conn);//Must Remove Id[i]'s OwnedObject Even Moved Authority Object
-        //수동으로 끊고 하면 괜찮긴한데 //연결 끊는 대상의 소유물은 전부제거 + 소유권 이동되어도 제거됨 , 코루틴으로 다음 프레임 기다리면 제거 안될 수도
+            //base.OnServerDisconnect(conn);//Must Remove Id[i]'s OwnedObject Even Moved Authority Object
+            //수동으로 끊고 하면 괜찮긴한데 //연결 끊는 대상의 소유물은 전부제거 + 소유권 이동되어도 제거됨 , 코루틴으로 다음 프레임 기다리면 제거 안될 수도
 
-        /*
-        if (Player.GetComponentInChildren<IAttach>() != null)
-            Player.GetComponentInChildren<IAttach>().Detach();
-        else
-            print("Not Detached");
-        */
+            /*
+            if (Player.GetComponentInChildren<IAttach>() != null)
+                Player.GetComponentInChildren<IAttach>().Detach();
+            else
+                print("Not Detached");
+            */
 
-        //======================================분리 안하고 클라가 나갈때 에러 (서버가 클라의 붙인 오브젝트를 찾지못함) - 소유권이동 문제
-        //연결 끊기 버튼을 따로 해야하나
+            //======================================분리 안하고 클라가 나갈때 에러 (서버가 클라의 붙인 오브젝트를 찾지못함) - 소유권이동 문제
+            //연결 끊기 버튼을 따로 해야하나
+
+        }//Disable
 
         conn.Disconnect();
 

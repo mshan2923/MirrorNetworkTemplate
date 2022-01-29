@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8477923463724328270
+--- !u!1 &6361202893128328807
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,37 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8477923463724328257}
-  - component: {fileID: 8477923463724328256}
-  - component: {fileID: 3552465488725620834}
+  - component: {fileID: 6361202893128328802}
+  - component: {fileID: 6361202893128328801}
+  - component: {fileID: 6361202893128328800}
   m_Layer: 0
-  m_Name: TestSpawnManager
+  m_Name: Pool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8477923463724328257
+--- !u!4 &6361202893128328802
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8477923463724328270}
+  m_GameObject: {fileID: 6361202893128328807}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8477923463724328256
+--- !u!114 &6361202893128328801
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8477923463724328270}
+  m_GameObject: {fileID: 6361202893128328807}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
@@ -47,29 +48,26 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   visible: 0
-  m_AssetId: 
+  m_AssetId: ce15ba957997f7043b275dfe720d12b3
   hasSpawned: 0
---- !u!114 &3552465488725620834
+--- !u!114 &6361202893128328800
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8477923463724328270}
+  m_GameObject: {fileID: 6361202893128328807}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fc2b737634871244bf2bfa1d62a2da1, type: 3}
+  m_Script: {fileID: 11500000, guid: 794174efd2f664547969b622f7b813b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  Spawns:
-  - Title: Debug Object
-    SpawnObject: {fileID: 367930136218686763, guid: 288e075a6e54bf248a63cb932dcb5863, type: 3}
-    ActiveList: []
-    ActiveAmount: 0
-    MaxSpawnAmount: 5
-    AutoResize: 1
-    AutoSpawn: 0
-    ClientSpawn: 1
-  DebugSpawnPos: 1
+  Pool:
+  - Title: 
+    StartSize: 0
+    MaxSize: 5
+    prefab: {fileID: 367930136218686763, guid: 288e075a6e54bf248a63cb932dcb5863, type: 3}
+    parent: {fileID: 0}
+    currentCount: 0
