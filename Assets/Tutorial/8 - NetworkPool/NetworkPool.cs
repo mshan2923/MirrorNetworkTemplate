@@ -6,163 +6,6 @@ using UnityEditor;
 
 public class NetworkPool : NetworkBehaviour
 {
-    #region Disable
-    /*
-    [System.Serializable]
-    public class PoolManageSlot
-    {
-        public string TitleName;
-        public int ActiveAmount = 0;
-        public int SpawnAmount = 1;// 0 이하는 무제한 스폰
-
-        int _onwerID = 0;
-        /// <summary>
-        /// Connection ID
-        /// </summary>
-        public int OnwerID// 기본값은 서버소유
-        {
-            get => _onwerID;
-            set
-            {
-                _onwerID = value;
-
-                ChangeOnwer();//업뎃 함수
-            }
-        }
-
-        /// <summary>
-        /// Need NetworkIdentity Component
-        /// </summary>
-        [SerializeField]
-        GameObject SpawnObject;
-
-        List<uint> ActiveObjects = new List<uint>();
-        public List<uint> Activates
-        {
-            get => ActiveObjects;
-        }
-        Stack<uint> DeactiveObjects = new();
-
-        void ChangeOnwer()
-        {
-            //ActiveObjects들 소유권 이동
-        }
-
-        [Server]
-        public uint Get()
-        {
-            if (SpawnObject != null)
-            {
-                if (SpawnAmount <= 0 || ActiveObjects.Count < SpawnAmount)
-                {
-                    if (DeactiveObjects.Count > 0)
-                    {
-                        var objID = NetworkServer.spawned[DeactiveObjects.Pop()];
-                        SyncPoolObjectEnable(objID.netId, true);
-                        //objID.visible = Visibility.Default;
-                        //objID.enabled = true;
-
-                        ActiveAmount++;
-                        ActiveObjects.Add(objID.netId);
-
-                        return objID.netId;
-                    }
-                    else
-                    {
-                        var obj = GameObject.Instantiate(SpawnObject);
-
-                        if (OnwerID > 0)
-                        {
-                            NetworkServer.Spawn(obj, NetworkServer.connections[OnwerID]);
-                        }
-                        else
-                        {
-                            NetworkServer.Spawn(obj, NetworkServer.localConnection);
-                        }
-
-
-                        NetworkIdentity spawnedID = obj.GetComponent<NetworkIdentity>();
-                        if (spawnedID == null)
-                        {
-                            NetworkServer.UnSpawn(obj);
-                            return 0;
-                        }
-                        else
-                        {
-                            ActiveObjects.Add(spawnedID.netId);
-
-                            NetworkDebug.RPCLog(spawnedID.netId + " + Create Pool");
-
-                            ActiveAmount++;
-
-                            return spawnedID.netId;
-                        }
-                    }
-                }
-            }
-            return 0;
-        }
-        [Server]
-        public bool Return(uint ID)
-        {
-            if (ActiveObjects.Contains(ID))
-            {
-                //var obj = NetworkServer.spawned[ID].gameObject;
-                SyncPoolObjectEnable(ID, false);
-                //NetworkServer.spawned[ID].visible = Visibility.ForceHidden;
-                //NetworkServer.spawned[ID].enabled = false;
-
-                ActiveAmount--;
-                ActiveObjects.Remove(ID);
-                DeactiveObjects.Push(ID);
-
-                return true;
-            }
-
-            NetworkManager.print("Fail to Return");
-
-            return false;
-        }
-
-        [ClientRpc(includeOwner = true)]
-        void SyncPoolObjectEnable(uint ID, bool enable)
-        {
-            var obj = NetworkClient.spawned[ID].gameObject;
-
-            Debug.Log(ID + " + " + enable + " - SyncPoolObject Enable");
-            NetworkDebug.CMDLog(ID + " + " + enable);
-
-            NetworkClient.spawned[ID].visible = enable ? Visibility.ForceShown : Visibility.ForceHidden;
-            NetworkClient.spawned[ID].enabled = enable;
-
-            obj.SetActive(enable);
-        }//============================씨벌 ... RPC가 되는거 맞어??
-    }
-
-    static NetworkPool _instance;
-    public static NetworkPool Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = GameObject.FindObjectOfType<NetworkPool>();
-            }
-            return _instance;
-        }
-    }
-
-    //=====도중에 들어온 오브젝트 활성화는? , ConnectionID 는 0부터 시작인가? 
-    //=====NetworkManager.spawnable Prefab 자동등록 , (비)활성화 변경 적용 안됨
-
-    public List<PoolManageSlot> Pool = new List<PoolManageSlot>();
-
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
-    }
-    */
-    #endregion
     [System.Serializable]
     public class PoolSlot
     {
@@ -216,7 +59,7 @@ public class NetworkPool : NetworkBehaviour
         }
         GameObject SpawnHandler(SpawnMessage msg)
         {
-            //NetworkDebug.CMDLog("spawn");
+            NetworkDebug.CMDLog("spawn " + msg.netId);
 
             return GetFromPool(msg.position, msg.rotation);
         }
@@ -226,7 +69,12 @@ public class NetworkPool : NetworkBehaviour
 
             PutBackInPool(spawned);
         }
-        public GameObject GetFromPool(Vector3 Pos, Quaternion Rot)
+        [Server]
+        public GameObject Get()
+        {
+            return GetFromPool(Vector3.zero, Quaternion.identity);
+        }
+        GameObject GetFromPool(Vector3 Pos, Quaternion Rot)
         {
             GameObject next = Lpool.Count > 0 ? Lpool.Dequeue() : CreateNew();//로컬의 상황에 맞게 
             if (next == null) { return null; }
@@ -235,8 +83,7 @@ public class NetworkPool : NetworkBehaviour
             {
                 NetworkServer.Spawn(next);//이걸로 클라에게 신호
 
-                next.transform.position = Pos;
-                next.transform.rotation = Rot;
+                next.transform.SetPositionAndRotation(Pos, Rot);
             }
 
             next.transform.SetParent(parent.transform);
@@ -245,14 +92,23 @@ public class NetworkPool : NetworkBehaviour
             return next;
 
         }
-        public void PutBackInPool(GameObject Spawnd)
+        [Server]
+        public void Return(GameObject spawned)
+        {
+            PutBackInPool(spawned);
+        }
+        void PutBackInPool(GameObject Spawnd)
         {
             //NetworkDebug.RPCLog("PutBackInPool");
+            if (Lpool.Contains(Spawnd))
+            {
+                return;
+            }
 
             if (NetworkClient.isHostClient)
                 NetworkServer.UnSpawn(Spawnd);//이걸로 클라에게 신호
 
-            Spawnd.transform.SetAsLastSibling();//============================== For Debuging
+            Spawnd.transform.SetAsLastSibling();// For Debuging
             Spawnd.SetActive(false);
 
             Lpool.Enqueue(Spawnd);
@@ -276,18 +132,28 @@ public class NetworkPool : NetworkBehaviour
 
     public List<PoolSlot> Pool = new();
 
+
     private void Start()
     {
         for (int i = 0; i < Pool.Count; i++)
         {
             Pool[i].InitializePool(gameObject);
+
+            if (NetworkClient.isHostClient)
+            {
+                //if (! NetworkManager.singleton.spawnPrefabs.Contains(Pool[i].prefab))
+                {
+                    //NetworkManager.singleton.spawnPrefabs.Add(Pool[i].prefab);
+                }
+            }else
+            {              
+                //CMDSyncPool(NetworkClient.localPlayer.netId, i);
+                //스폰 안된 이유가 NetworkManager.spawnprefab 에 등록 안되서
+            }
+
             //작동 안되면 Pool오브젝트가 붙인체로 스폰 안됨
         }
         //서버와 클라가 있어야 함
-    }
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
     }
     private void OnDestroy()
     {
@@ -295,6 +161,33 @@ public class NetworkPool : NetworkBehaviour
         {
             NetworkClient.UnregisterPrefab(Pool[i].prefab);
         }
+    }
+    public override void OnStartClient()
+    {
+        for (int i = 0; i < Pool.Count; i++)
+        {
+            if (!NetworkManager.singleton.spawnPrefabs.Contains(Pool[i].prefab))
+            {
+                NetworkManager.singleton.spawnPrefabs.Add(Pool[i].prefab);//클라도 등록필요
+            }
+        }
+
+        base.OnStartClient();
+    }
+
+    [Command(requiresAuthority = false)]
+    void CMDSyncPool(uint NetID, int Index)
+    {
+        //print("Need Spawn : " + Pool[Index].ActiveCount + "  NetID : " + NetID);
+
+        ForceSyncPool(NetworkServer.spawned[NetID].connectionToClient, Index, Pool[Index].ActiveCount);
+
+        
+    }
+    [TargetRpc()]
+    void ForceSyncPool(NetworkConnection target, int PoolIndex, int Amount)
+    {
+        print("Receive Need Spawn " + Amount);
     }
 }
 
@@ -312,31 +205,15 @@ public class NetworkPoolEditor : Editor
     {
         base.OnInspectorGUI();
 
-        #region Disable
-        /*
         if (GUILayout.Button("Add Pool"))
         {
-            uint objId = onwer.Pool[0].Get();
-
-            NetworkServer.spawned[objId].gameObject.transform.position = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)) * 5;
-        }
-        if (GUILayout.Button("Return Pool"))
-        {
-            if (onwer.Pool[0].Activates.Count > 0)
-            {
-                onwer.Pool[0].Return(onwer.Pool[0].Activates[0]);
-            }
-        }
-        */
-        #endregion 
-
-        if (GUILayout.Button("Add Pool"))
-        {
-            onwer.Pool[0].GetFromPool(new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)) * 5, Quaternion.identity);
+            //onwer.Pool[0].Get(new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)) * 5, Quaternion.identity);
+            var obj = onwer.Pool[0].Get();
+            obj.GetComponent<NetworkTransform>().RpcTeleportAndRotate(new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)) * 5, Quaternion.identity);
         }
         if (GUILayout.Button("Retrun Pool"))
         {
-            onwer.Pool[0].PutBackInPool(onwer.gameObject.transform.GetChild(0).gameObject);
+            onwer.Pool[0].Return(onwer.gameObject.transform.GetChild(0).gameObject);
         }
     }
 }

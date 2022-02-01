@@ -255,14 +255,17 @@ public class PoolNetworkManager : NetworkManager
         //NetworkServer.spawned[objID].gameObject.GetComponent<NetworkTransform>()
         //    .RpcTeleport(new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f)) * 5f);
 
-        NetworkPool.Instance.Pool[0].GetFromPool(new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f)) * 5f, Quaternion.identity);
+        var obj = NetworkPool.Instance.Pool[0].Get();
+
+        if (obj != null)
+            obj.GetComponent<NetworkTransform>().RpcTeleport(new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f)) * 5f);
     }
     public void TestReturnPool()
     {
         //bool Lresult = false;
         //NetworkDebug.RPCLog("Return Pool is " + Lresult);
 
-        NetworkPool.Instance.Pool[0].PutBackInPool(NetworkPool.Instance.gameObject.transform.GetChild(0).gameObject);
+        NetworkPool.Instance.Pool[0].Return(NetworkPool.Instance.gameObject.transform.GetChild(0).gameObject);
         
     }
 }
